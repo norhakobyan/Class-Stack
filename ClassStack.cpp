@@ -1,69 +1,114 @@
 #include <iostream>
 
-class Stack {
+class Vector {
 public:
-	Stack(const int size = 5);
-	~Stack();
-	void push(int);
-	int pop();
+	Vector(const int size = 10);
+	~Vector();
+	void push_back(int);
+	void insert_at(int index, int elem);
+	void showArray(int m_size);
+	int get_at(int index);
+	Vector (const Vector & rhs);
 private:
+	int m_size;
+	int * m_arr;
 	int res;
-	int * stack;
-	int size;
-
 };
 
 
 int main() {
-	Stack * tmp = new Stack;
-	tmp->push(1);
-	tmp->push(2);
-	tmp->push(3);
-	tmp->push(4);
-	tmp->push(5);
-	tmp->push(6);
-	tmp->push(7);
-	tmp->push(8);
+	Vector * tmp = new Vector;
+	Vector ptr(Vector & tmp);
+	tmp->push_back(1);
+	tmp->push_back(2);
+	tmp->push_back(3);
+	tmp->insert_at(1, 5);
+	tmp->insert_at(0, 4);
+	tmp->push_back(8);
+	tmp->push_back(5);
+	tmp->insert_at(6, 9);
+	tmp->showArray(7);
+	std::cout << std::endl;
+	std::cout<<tmp->get_at(0);
+
 
 	std::cout << std::endl;
-	std::cout << "pop items " << tmp->pop() << std::endl;
-	std::cout << "pop items " << tmp->pop() << std::endl;
-	std::cout << "pop items " << tmp->pop() << std::endl;
-	std::cout << "pop items " << tmp->pop() << std::endl;
-	std::cout << "pop items " << tmp->pop() << std::endl;
-	std::cout << std::endl;
+	
 }
 
-Stack::Stack(int size) {
-	this->size = size;
-	res = -1;
-	stack = new int[size];
+Vector::Vector(const int size){
+	this->m_size = size;
+	this->m_arr = new int[this->m_size];
+	this->res = -1;
+
 }
 
-void Stack::push(int sum) {
+Vector::Vector(const Vector & rhs) {
+	this->m_size = rhs.m_size;
+	this->m_arr = rhs.m_arr;
+	this->res = rhs.res;
+}
+
+void Vector::push_back(int sum) {
+	
 	if (this->res == 30) {
 		std::cout << "Stack overflow" << std::endl;
 		return;
 	}
-	else if (this->res == this->size - 1) {
-		int * newStack = new int[2 * this->size];
-		for (int i = 0; i < this->size; ++i) {
-			newStack[i] = this->stack[i];
+	else if (this->res == this->m_size - 1) {
+		int * newM_arr = new int[2 * this->m_size];
+		for (int i = 0; i < this->m_size; ++i) {
+			newM_arr[i] = this->m_arr[i];
 		}
-		delete[] this->stack;
-		this->stack = newStack;
-		this->size = this->size * 2;
+		delete[] this->m_arr;
+		this->m_arr = newM_arr;
+		this->m_size = this->m_size * 2;
 	}
-	this->stack[++this->res] = sum;
-	std::cout << "push items " << sum << std::endl;
+	this->m_arr[++this->res] = sum;
+	//std::cout << "push items " << sum << std::endl;
 }
 
-int Stack::pop() {
-	int sum = this->stack[this->res--];
-	return  sum;
+void Vector::insert_at(int index, int elem) {
+	if (this->res == this->m_size - 1) {
+		int * newM_arr = new int[2 * this->m_size];
+		for (int i = 0; i < this->m_size; ++i) {
+			newM_arr[i] = this->m_arr[i];
+		}
+		delete[] this->m_arr;
+		this->m_arr = newM_arr;
+		this->m_size = this->m_size * 2;
+	}
+	int * insert = new int[this->m_size];
+	int j = 0;
+	for (int i = 0; i <= this->m_size; ++i) {
+		if (i == index) {
+			insert[index] = elem;
+			++this->res;
+		}
+		else{
+		insert[i] = this->m_arr[j];
+		j++;
+		}
+	}
+	for (int i = 0; i < this->m_size; ++i) {
+		this->m_arr[i] = insert[i];
+	}
+	
 }
 
-Stack::~Stack() {
-	delete[] this->stack;
-	this->stack = NULL;
+void Vector::showArray(int m_size) {
+	for (int i = 0; i < this->res+1; ++i) {
+		std::cout <<"["<< this->m_arr[i] << "]" ;
+	}
+}
+
+int Vector::get_at(int index) {
+	return this->m_arr[index];
+
+}
+
+
+Vector::~Vector(){
+	delete[] this->m_arr;
+	this->m_arr = NULL;
 }
